@@ -13,6 +13,8 @@ import com.anthonyfer0220.job_application_service.dto.JobApplicationRequestDTO;
 import com.anthonyfer0220.job_application_service.dto.JobApplicationResponseDTO;
 import com.anthonyfer0220.job_application_service.service.JobApplicationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/job-applications")
+@Tag(name = "Job Application", description = "API for managing Job Applications")
 public class JobApplicationController {
     private final JobApplicationService jobApplicationService;
 
@@ -29,12 +32,14 @@ public class JobApplicationController {
     }
 
     @GetMapping
+    @Operation(summary = "Get Job Applications")
     public ResponseEntity<List<JobApplicationResponseDTO>> getJobApplications() {
         List<JobApplicationResponseDTO> jobApplications = jobApplicationService.getJobApplications();
         return ResponseEntity.ok().body(jobApplications);
     }
 
     @PostMapping
+    @Operation(summary = "Create a new Job Application")
     public ResponseEntity<JobApplicationResponseDTO> createJobApplication(
             @Valid @RequestBody JobApplicationRequestDTO jobApplicationRequestDTO) {
         JobApplicationResponseDTO jobApplicationResponseDTO = jobApplicationService
@@ -44,6 +49,7 @@ public class JobApplicationController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update a Job Application")
     public ResponseEntity<JobApplicationResponseDTO> updateJobApplication(@PathVariable UUID id,
             @Valid @RequestBody JobApplicationRequestDTO jobApplicationRequestDTO) {
 
@@ -54,6 +60,7 @@ public class JobApplicationController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a Job Application")
     public ResponseEntity<Void> deleteJobApplication(@PathVariable UUID id) {
         jobApplicationService.deleteJobApplication(id);
         return ResponseEntity.noContent().build();
