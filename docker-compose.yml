@@ -1,0 +1,35 @@
+services:
+  job-application-service:
+    container_name: job-application-service
+    build: ./job-application-service
+    image: anthonyfer0220/job-application-service:1.0.0
+    ports:
+      - 4000:4000
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://job-application-service-db:5432/db
+      - SPRING_DATASOURCE_USERNAME=admin_user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SQL_INIT_MODE=always
+    depends_on:
+      - job-application-service-db
+    networks:
+      - internal
+
+  job-application-service-db:
+    container_name: job-application-service-db
+    image: postgres:17
+    ports:
+      - 5000:5432
+    environment:
+      - POSTGRES_USER=admin_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=db
+    volumes:
+      - ./Docker/volumes/job-application-db:/var/lib/postgresql/data
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
