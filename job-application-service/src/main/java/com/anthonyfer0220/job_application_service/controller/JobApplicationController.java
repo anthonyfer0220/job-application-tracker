@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/job-applications")
 @Tag(name = "Job Application", description = "API for managing Job Applications")
@@ -36,6 +38,15 @@ public class JobApplicationController {
     public ResponseEntity<List<JobApplicationResponseDTO>> getJobApplications() {
         List<JobApplicationResponseDTO> jobApplications = jobApplicationService.getJobApplications();
         return ResponseEntity.ok().body(jobApplications);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get a Job Application")
+    public ResponseEntity<JobApplicationResponseDTO> getJobApplicationById(@PathVariable UUID id) {
+
+        JobApplicationResponseDTO jobApplicationResponseDTO = jobApplicationService.getJobApplicationById(id);
+
+        return ResponseEntity.ok().body(jobApplicationResponseDTO);
     }
 
     @PostMapping

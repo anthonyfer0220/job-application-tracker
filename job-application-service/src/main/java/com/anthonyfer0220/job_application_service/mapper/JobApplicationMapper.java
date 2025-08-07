@@ -15,8 +15,13 @@ public class JobApplicationMapper {
         jobApplicationDTO.setCompanyName(jobApplication.getCompanyName());
         jobApplicationDTO.setPosition(jobApplication.getPosition());
         jobApplicationDTO.setDateApplied(jobApplication.getDateApplied().toString());
-        jobApplicationDTO.setOaDate(jobApplication.getOaDate().toString());
-        jobApplicationDTO.setLatestInterviewDate(jobApplication.getLatestInterviewDate().toString());
+
+        jobApplicationDTO.setOaDate(jobApplication.getOaDate() != null ? jobApplication.getOaDate().toString() : null);
+
+        jobApplicationDTO.setLatestInterviewDate(
+                jobApplication.getLatestInterviewDate() != null ? jobApplication.getLatestInterviewDate().toString()
+                        : null);
+
         jobApplicationDTO.setFinalDecision(jobApplication.getFinalDecision().toString());
 
         return jobApplicationDTO;
@@ -28,10 +33,16 @@ public class JobApplicationMapper {
         jobApplication.setCompanyName(jobApplicationRequestDTO.getCompanyName());
         jobApplication.setPosition(jobApplicationRequestDTO.getPosition());
         jobApplication.setDateApplied(LocalDate.parse(jobApplicationRequestDTO.getDateApplied()));
-        jobApplication.setOaDate(LocalDate.parse(jobApplicationRequestDTO.getOaDate()));
-        jobApplication.setLatestInterviewDate(LocalDate.parse(jobApplicationRequestDTO.getLatestInterviewDate()));
+
+        jobApplication.setOaDate(parseOptionalDate(jobApplicationRequestDTO.getOaDate()));
+        jobApplication.setLatestInterviewDate(parseOptionalDate(jobApplicationRequestDTO.getLatestInterviewDate()));
+
         jobApplication.setFinalDecision(FinalDecision.fromString(jobApplicationRequestDTO.getFinalDecision()));
 
         return jobApplication;
+    }
+
+    private static LocalDate parseOptionalDate(String dateStr) {
+        return (dateStr != null && !dateStr.isBlank()) ? LocalDate.parse(dateStr) : null;
     }
 }
