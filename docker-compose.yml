@@ -20,7 +20,7 @@ services:
     container_name: job-application-service-db
     image: postgres:17
     ports:
-      - 5000:5432
+      - 5005:5432
     environment:
       - POSTGRES_USER=admin_user
       - POSTGRES_PASSWORD=password
