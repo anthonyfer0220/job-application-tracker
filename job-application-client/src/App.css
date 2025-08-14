@@ -1,42 +1,122 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+:root {
+  --blue-900: #1d3557;
+  --blue-500: #457b9d;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-300: #e5e7eb;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+.header .nav-link {
+  color: #a8dadc;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
+.header .nav-link:hover {
+  color: #f1faee;
+}
+
+.header .nav-link:active,
+.header .navbar-brand,
+.header .navbar-brand:hover,
+.header .navbar-brand:active {
+  color: #fff;
+}
+
+.header .navbar {
+  background: linear-gradient(160deg, var(--blue-900) 0%, var(--blue-500) 100%);
+}
+
+.page-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrap {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  background: var(--gray-50);
+}
+
+.form-group input:focus {
+  border-color: #457b9d;
+  box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.2);
+  background: #fff;
+}
+
+.dashboard-page {
+  background: var(--gray-50);
+  min-height: 100%;
+  padding: 32px 0;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.dashboard-table {
+  background: #fff;
+  border-radius: 26px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .1);
+  overflow: hidden;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.dashboard-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  overflow: auto;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dashboard-card .form-control,
+.dashboard-card .form-select {
+  height: 40px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.form-shell {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.card {
-  padding: 2em;
+.btn-brand {
+  background: var(--blue-500);
+  color: #fff;
+  border: none;
+  transition: filter .15s ease-in-out, transform .05s ease-in-out;
 }
 
-.read-the-docs {
-  color: #888;
+.btn-brand:hover {
+  filter: brightness(.95);
 }
