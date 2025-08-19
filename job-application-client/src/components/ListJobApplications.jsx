@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { listJobApplications, deleteJobApplication as deleteJobApplicationFromServer } from '../services/JobApplicationService'
 
 function formatDate(dateStr) {
     if (!dateStr) return '';
@@ -9,37 +10,21 @@ function formatDate(dateStr) {
 
 const ListJobApplications = () => {
 
-    const dummyData = [
-        {
-            "id": 1,
-            "companyName": "Amazon",
-            "position": "Intern",
-            "dateApplied": "2025-09-08",
-            "oaDate": "2025-12-08",
-            "latestInterviewDate": "2025-12-08",
-            "finalDecision": "PENDING"
-        },
-        {
-            "id": 2,
-            "companyName": "Google",
-            "position": "Intern",
-            "dateApplied": "2025-11-08",
-            "oaDate": "2025-12-08",
-            "latestInterviewDate": null,
-            "finalDecision": "PENDING"
-        },
-        {
-            "id": 3,
-            "companyName": "Skype",
-            "position": "Intern",
-            "dateApplied": "2025-12-08",
-            "oaDate": null,
-            "latestInterviewDate": null,
-            "finalDecision": "PENDING"
-        },
-    ]
+    const [jobApplications, setJobApplications] = useState([])
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        getAllJobApplications();
+    }, [])
+
+    function getAllJobApplications() {
+        listJobApplications().then((response) => {
+            setJobApplications(response.data);
+        }).catch(error => {
+            console.error(error);
+        })
+    }
 
     function addNewJobApplication() {
         navigate('/dashboard/add')
@@ -50,7 +35,11 @@ const ListJobApplications = () => {
     }
 
     function deleteJobApplication(id) {
-        console.log(id);
+        deleteJobApplicationFromServer(id).then((response) => {
+            getAllJobApplications();
+        }).catch(error => {
+            console.error(error);
+        })
     }
 
     return (
@@ -78,7 +67,7 @@ const ListJobApplications = () => {
                             </thead>
                             <tbody>
                                 {
-                                    dummyData.map(jobApplication =>
+                                    jobApplications.map(jobApplication =>
                                         <tr key={jobApplication.id}>
                                             <td>{jobApplication.companyName}</td>
                                             <td>{jobApplication.position}</td>

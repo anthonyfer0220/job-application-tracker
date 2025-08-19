@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { createJobApplication, getJobApplication, updateJobApplication } from '../services/JobApplicationService'
 
 const JobApplication = () => {
 
@@ -18,6 +19,23 @@ const JobApplication = () => {
         companyName: '',
         position: '',
     })
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (id) {
+            getJobApplication(id).then((response) => {
+                setCompanyName(response.data.companyName ?? '');
+                setPosition(response.data.position ?? '');
+                setDateApplied(response.data.dateApplied ?? '');
+                setOaDate(response.data.oaDate ?? '');
+                setLatestInterviewDate(response.data.latestInterviewDate ?? '');
+                setFinalDecision(response.data.finalDecision ?? '');
+            }).catch(error => {
+                console.error(error);
+            })
+        }
+    }, [id])
 
     function validateForm() {
         let valid = true;
@@ -47,6 +65,16 @@ const JobApplication = () => {
         e.preventDefault();
 
         if (!validateForm()) return;
+
+        const jobApplication = { companyName, position, dateApplied, oaDate, latestInterviewDate, finalDecision };
+
+        const action = id
+            ? updateJobApplication(id, jobApplication)
+            : createJobApplication(jobApplication);
+
+        action
+            .then(() => navigate('/dashboard'))
+            .catch(console.error);
     }
 
     const title = id ? 'Update Job Application' : 'Add Job Application';
@@ -59,7 +87,7 @@ const JobApplication = () => {
                     <hr className='mb-4' />
 
                     <form onSubmit={handleSubmit}>
-                        <div className='form-group mb-3'>
+                        <div className='form-group mb-2'>
                             <label className='form-label'>Company Name:</label>
                             <input
                                 type='text'
@@ -68,12 +96,11 @@ const JobApplication = () => {
                                 value={companyName}
                                 className={`form-control ${errors.companyName ? 'is-invalid' : ''}`}
                                 onChange={(e) => setCompanyName(e.target.value)}
-                                required
                             >
                             </input>
                             {errors.companyName && <div className='invalid-feedback'> {errors.companyName} </div>}
                         </div>
-                        <div className='form-group mb-3'>
+                        <div className='form-group mb-2'>
                             <label className='form-label'>Position:</label>
                             <input
                                 type='text'
@@ -82,12 +109,11 @@ const JobApplication = () => {
                                 value={position}
                                 className={`form-control ${errors.position ? 'is-invalid' : ''}`}
                                 onChange={(e) => setPosition(e.target.value)}
-                                required
                             >
                             </input>
                             {errors.position && <div className='invalid-feedback'> {errors.position} </div>}
                         </div>
-                        <div className='form-group mb-3'>
+                        <div className='form-group mb-2'>
                             <label className='form-label'>Date Applied:</label>
                             <input
                                 type='date'
@@ -98,7 +124,7 @@ const JobApplication = () => {
                             >
                             </input>
                         </div>
-                        <div className='form-group mb-3'>
+                        <div className='form-group mb-2'>
                             <label className='form-label'>OA Date:</label>
                             <input
                                 type='date'
@@ -109,7 +135,7 @@ const JobApplication = () => {
                             >
                             </input>
                         </div>
-                        <div className='form-group mb-3'>
+                        <div className='form-group mb-2'>
                             <label className='form-label'>Latest Interview Date:</label>
                             <input
                                 type='date'
@@ -125,7 +151,7 @@ const JobApplication = () => {
                             <select
                                 name='finalDecision'
                                 value={finalDecision}
-                                className='form-control'
+                                className='form-select'
                                 onChange={(e) => setFinalDecision(e.target.value)}
                             >
                                 <option value='OFFERED'>OFFERED</option>
