@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = "http://localhost:4000/job-applications";
+const BASE_URL = "http://localhost:4005/api/job-applications";
 
 export const listJobApplications = () => axios.get(BASE_URL);
 

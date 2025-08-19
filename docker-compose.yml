@@ -3,8 +3,8 @@ services:
     container_name: job-application-service
     build: ./job-application-service
     image: anthonyfer0220/job-application-service:1.0.0
-    ports:
-      - 4000:4000
+    # ports:
+    #   - 4000:4000
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://job-application-service-db:5432/db
       - SPRING_DATASOURCE_USERNAME=admin_user
@@ -27,6 +27,15 @@ services:
       - POSTGRES_DB=db
     volumes:
       - ./Docker/volumes/job-application-db:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  api-gateway:
+    container_name: api-gateway
+    build: ./api-gateway
+    image: anthonyfer0220/api-gateway:1.0.0
+    ports:
+      - 4005:4005
     networks:
       - internal
 
