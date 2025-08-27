@@ -25,7 +25,7 @@ body {
 .header .navbar-brand,
 .header .navbar-brand:hover,
 .header .navbar-brand:active {
-  color: #fff;
+  color: #ffffff;
 }
 
 .header .navbar {
@@ -40,6 +40,64 @@ body {
 
 .content-wrap {
   flex: 1;
+}
+
+.landing-page {
+  height: 100%;
+  background: linear-gradient(135deg, var(--blue-900), var(--blue-500));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.auth-container {
+  height: 100%;
+  background: linear-gradient(135deg, var(--blue-900), var(--blue-500));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+  padding: 28px;
+}
+
+.auth-card h2 {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+
+.auth-subtitle {
+  margin: 0 0 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.auth-actions {
+  color: #6b7280;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.auth-link {
+  color: var(--blue-500);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
+.auth-link:hover {
+  color: var(--blue-900);
+  text-decoration: underline;
 }
 
 .form-group {
@@ -68,7 +126,7 @@ body {
 .form-group input:focus {
   border-color: #457b9d;
   box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.2);
-  background: #fff;
+  background: #ffffff;
 }
 
 .dashboard-page {
@@ -85,7 +143,7 @@ body {
 }
 
 .dashboard-table {
-  background: #fff;
+  background: #ffffff;
   border-radius: 26px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, .1);
   overflow: hidden;
@@ -93,7 +151,7 @@ body {
 }
 
 .dashboard-card {
-  background: #fff;
+  background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   overflow: auto;
@@ -112,11 +170,15 @@ body {
 
 .btn-brand {
   background: var(--blue-500);
-  color: #fff;
+  color: #ffffff;
   border: none;
   transition: filter .15s ease-in-out, transform .05s ease-in-out;
 }
 
-.btn-brand:hover {
+.btn-brand:hover,
+.btn-brand:focus,
+.btn-brand:active {
+  background: var(--blue-500);
+  color: #ffffff;
   filter: brightness(.95);
 }
