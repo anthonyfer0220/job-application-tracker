@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import AuthService from '../../services/AuthService';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (e) => {
+  // If a protected route sent the user here, ho back there after login; else fo to /dashboard
+  const from = location.state?.from?.pathname || '/dashboard';
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
-    console.log('Login submitted: ', { email, password });
+    try {
+      const payload = { email: email.trim().toLowerCase(), password };
+      const resp = await AuthService.loginUser(payload);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Invalid email or password. Please try again');
+    } finally {
+      setSubmitting(false);
+    }
 
-    navigate('/dashboard');
   };
 
   return (
@@ -20,6 +35,9 @@ function Login() {
       <div className='auth-card'>
         <h2>Login</h2>
         <p className='auth-subtitle'>Welcome back! Please enter your details</p>
+
+        {error && <div className='alert alert-soft-danger mb-3'>{error}</div>}
+
         <form onSubmit={handleSubmit}>
 
           <div className='form-group'>
@@ -36,14 +54,17 @@ function Login() {
             <label>Password: </label>
             <input
               type='password'
-              autoComplete='new-password'
+              autoComplete='current-password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          <button className='btn btn-brand' type='submit'>Login</button>
+          <button className='btn btn-brand' type='submit' disabled={submitting}>
+            {submitting ? 'Logging in...' : 'Login'}
+          </button>
+
           <p className='auth-actions'>
             Don't have an account? <Link to='/signup' className='auth-link'>Sign Up</Link>
           </p>

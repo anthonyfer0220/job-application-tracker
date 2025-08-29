@@ -182,3 +182,19 @@ body {
   color: #ffffff;
   filter: brightness(.95);
 }
+
+.alert-soft-danger {
+  background-color: #fde8ee;
+  color: #d53230;
+  border: 1px solid #f3d6d8;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.alert-soft-success {
+  background-color: #ebe8fd;
+  color: #3038d5;
+  border: 1px solid #d6d6f3;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}

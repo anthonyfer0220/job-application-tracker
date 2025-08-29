@@ -1,13 +1,13 @@
-import axios from 'axios';
+import api from './api';
 
-const BASE_URL = "http://localhost:4005/api/job-applications";
+const BASE_URL = '/api/job-applications';
 
-export const listJobApplications = () => axios.get(BASE_URL);
+export const listJobApplications = (params) => api.get(BASE_URL);
 
-export const createJobApplication = (jobApplication) => axios.post(BASE_URL, jobApplication);
+export const createJobApplication = (jobApplication) => api.post(BASE_URL, jobApplication);
 
-export const updateJobApplication = (jobApplicationId, jobApplication) => axios.put(`${BASE_URL}/${jobApplicationId}`, jobApplication);
+export const updateJobApplication = (jobApplicationId, jobApplication) => api.put(`${BASE_URL}/${jobApplicationId}`, jobApplication);
 
-export const getJobApplication = (jobApplicationId) => axios.get(`${BASE_URL}/${jobApplicationId}`);
+export const getJobApplication = (jobApplicationId) => api.get(`${BASE_URL}/${jobApplicationId}`);
 
-export const deleteJobApplication = (jobApplicationId) => axios.delete(`${BASE_URL}/${jobApplicationId}`);
+export const deleteJobApplication = (jobApplicationId) => api.delete(`${BASE_URL}/${jobApplicationId}`);

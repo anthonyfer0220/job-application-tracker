@@ -1,14 +1,15 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import AuthService from '../../services/AuthService';
 
 const Header = () => {
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log("Logout");
+    AuthService.logout();
 
-    navigate('login');
+    navigate('/login', { replace: true });
   }
 
   return (
