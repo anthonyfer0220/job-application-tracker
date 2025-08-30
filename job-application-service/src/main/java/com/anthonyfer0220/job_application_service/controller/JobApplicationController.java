@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -33,16 +34,19 @@ public class JobApplicationController {
 
     @GetMapping
     @Operation(summary = "Get Job Applications")
-    public ResponseEntity<List<JobApplicationResponseDTO>> getJobApplications() {
-        List<JobApplicationResponseDTO> jobApplications = jobApplicationService.getJobApplications();
+    public ResponseEntity<List<JobApplicationResponseDTO>> getJobApplications(
+            @RequestHeader("X-User-Email") String userEmail) {
+        List<JobApplicationResponseDTO> jobApplications = jobApplicationService.getJobApplications(userEmail);
         return ResponseEntity.ok().body(jobApplications);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a Job Application")
-    public ResponseEntity<JobApplicationResponseDTO> getJobApplicationById(@PathVariable UUID id) {
+    public ResponseEntity<JobApplicationResponseDTO> getJobApplicationById(@PathVariable UUID id,
+            @RequestHeader("X-User-Email") String userEmail) {
 
-        JobApplicationResponseDTO jobApplicationResponseDTO = jobApplicationService.getJobApplicationById(id);
+        JobApplicationResponseDTO jobApplicationResponseDTO = jobApplicationService.getJobApplicationById(id,
+                userEmail);
 
         return ResponseEntity.ok().body(jobApplicationResponseDTO);
     }
@@ -50,9 +54,10 @@ public class JobApplicationController {
     @PostMapping
     @Operation(summary = "Create a new Job Application")
     public ResponseEntity<JobApplicationResponseDTO> createJobApplication(
-            @Valid @RequestBody JobApplicationRequestDTO jobApplicationRequestDTO) {
+            @Valid @RequestBody JobApplicationRequestDTO jobApplicationRequestDTO,
+            @RequestHeader("X-User-Email") String userEmail) {
         JobApplicationResponseDTO jobApplicationResponseDTO = jobApplicationService
-                .createJobApplication(jobApplicationRequestDTO);
+                .createJobApplication(jobApplicationRequestDTO, userEmail);
 
         return ResponseEntity.ok().body(jobApplicationResponseDTO);
     }
@@ -60,18 +65,20 @@ public class JobApplicationController {
     @PutMapping("/{id}")
     @Operation(summary = "Update a Job Application")
     public ResponseEntity<JobApplicationResponseDTO> updateJobApplication(@PathVariable UUID id,
-            @Valid @RequestBody JobApplicationRequestDTO jobApplicationRequestDTO) {
+            @Valid @RequestBody JobApplicationRequestDTO jobApplicationRequestDTO,
+            @RequestHeader("X-User-Email") String userEmail) {
 
         JobApplicationResponseDTO jobApplicationResponseDTO = jobApplicationService.updateJobApplication(id,
-                jobApplicationRequestDTO);
+                jobApplicationRequestDTO, userEmail);
 
         return ResponseEntity.ok().body(jobApplicationResponseDTO);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a Job Application")
-    public ResponseEntity<Void> deleteJobApplication(@PathVariable UUID id) {
-        jobApplicationService.deleteJobApplication(id);
+    public ResponseEntity<Void> deleteJobApplication(@PathVariable UUID id,
+            @RequestHeader("X-User-Email") String userEmail) {
+        jobApplicationService.deleteJobApplication(id, userEmail);
         return ResponseEntity.noContent().build();
     }
 }

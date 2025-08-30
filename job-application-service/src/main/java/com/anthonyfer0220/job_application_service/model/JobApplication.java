@@ -35,4 +35,7 @@ public class JobApplication {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FinalDecision finalDecision;
+
+    @Column
+    private String ownerEmail;
 }
