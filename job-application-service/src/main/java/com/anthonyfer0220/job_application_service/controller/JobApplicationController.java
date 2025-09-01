@@ -1,8 +1,10 @@
 package com.anthonyfer0220.job_application_service.controller;
 
-import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anthonyfer0220.job_application_service.dto.JobApplicationRequestDTO;
 import com.anthonyfer0220.job_application_service.dto.JobApplicationResponseDTO;
+import com.anthonyfer0220.job_application_service.dto.PageResponseDTO;
 import com.anthonyfer0220.job_application_service.service.JobApplicationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,10 +36,19 @@ public class JobApplicationController {
     }
 
     @GetMapping
-    @Operation(summary = "Get Job Applications")
-    public ResponseEntity<List<JobApplicationResponseDTO>> getJobApplications(
-            @RequestHeader("X-User-Email") String userEmail) {
-        List<JobApplicationResponseDTO> jobApplications = jobApplicationService.getJobApplications(userEmail);
+    @Operation(summary = "Get Job Applications (paginated)")
+    public ResponseEntity<PageResponseDTO<JobApplicationResponseDTO>> getJobApplications(
+            @RequestHeader("X-User-Email") String userEmail, Pageable pageable) {
+
+        Sort sort = pageable.getSort().isSorted()
+                ? pageable.getSort()
+                : Sort.by(Sort.Order.desc("dateApplied"));
+
+        Pageable fixed = PageRequest.of(pageable.getPageNumber(), 10, sort);
+
+        PageResponseDTO<JobApplicationResponseDTO> jobApplications = jobApplicationService.getJobApplications(userEmail,
+                fixed);
+
         return ResponseEntity.ok().body(jobApplications);
     }
 

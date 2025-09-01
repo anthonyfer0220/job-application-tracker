@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.anthonyfer0220.job_application_service.dto.JobApplicationRequestDTO;
 import com.anthonyfer0220.job_application_service.dto.JobApplicationResponseDTO;
+import com.anthonyfer0220.job_application_service.dto.PageResponseDTO;
 import com.anthonyfer0220.job_application_service.exception.JobApplicationNotFoundException;
 import com.anthonyfer0220.job_application_service.mapper.JobApplicationMapper;
 import com.anthonyfer0220.job_application_service.model.FinalDecision;
@@ -22,11 +25,22 @@ public class JobApplicationService {
         this.jobApplicationRepository = jobApplicationRepository;
     }
 
-    public List<JobApplicationResponseDTO> getJobApplications(String ownerEmail) {
-        List<JobApplication> jobApplications = jobApplicationRepository.findByOwnerEmail(ownerEmail);
+    public PageResponseDTO<JobApplicationResponseDTO> getJobApplications(String ownerEmail, Pageable pageable) {
+        Page<JobApplication> page = jobApplicationRepository.findByOwnerEmail(ownerEmail, pageable);
 
-        return jobApplications.stream()
+        List<JobApplicationResponseDTO> items = page.getContent()
+                .stream()
                 .map(JobApplicationMapper::toDTO).toList();
+
+        return PageResponseDTO.<JobApplicationResponseDTO>builder()
+                .items(items)
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalItems(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .hasNext(page.hasNext())
+                .hasPrevious(page.hasPrevious())
+                .build();
     }
 
     public JobApplicationResponseDTO getJobApplicationById(UUID id, String ownerEmail) {

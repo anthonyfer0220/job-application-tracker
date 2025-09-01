@@ -2,7 +2,7 @@ import api from './api';
 
 const BASE_URL = '/api/job-applications';
 
-export const listJobApplications = (params) => api.get(BASE_URL);
+export const listJobApplications = (params) => api.get(BASE_URL, { params });
 
 export const createJobApplication = (jobApplication) => api.post(BASE_URL, jobApplication);
 
