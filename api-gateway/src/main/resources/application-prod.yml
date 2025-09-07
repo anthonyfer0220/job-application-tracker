@@ -1,0 +1,71 @@
+server:
+  port: 4005 # Gateway listens on port 4005
+  forward-headers-strategy: framework
+
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 10s
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+            - ${FRONTEND_ORIGIN:http://localhost:3000}
+            allowed-methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+            allowed-headers:
+            - "Authorization"
+            - "Content-Type"
+            allow-credentials: true
+
+      routes:
+      - id: job-application-service-route
+        uri: ${JOB_SERVICE_URL:http://job-application-service.job-application-tracker.internal:4000}
+        predicates:
+          - Path=/api/job-applications/**
+        filters:
+          - StripPrefix=1
+          - JwtValidation
+
+      - id: auth-service-route
+        uri: ${AUTH_SERVICE_URL:http://auth-service.job-application-tracker.internal:4002}
+        predicates:
+          - Path=/auth/**
+        filters:
+          - StripPrefix=1
+
+      - id: api-docs-job-application-route
+        uri: ${JOB_SERVICE_URL:http://job-application-service.job-application-tracker.internal:4000}
+        predicates:
+          - Path=/api-docs/job-applications
+        filters:
+          - RewritePath=/api-docs/job-applications,/v3/api-docs
+          - JwtValidation
+
+      - id: api-docs-auth-route
+        uri: ${AUTH_SERVICE_URL:http://auth-service.job-application-tracker.internal:4002}
+        predicates:
+          - Path=/api-docs/auth
+        filters:
+          - RewritePath=/api-docs/auth,/v3/api-docs
+          - JwtValidation
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+        - info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
