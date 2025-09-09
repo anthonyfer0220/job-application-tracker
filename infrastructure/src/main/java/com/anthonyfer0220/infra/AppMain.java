@@ -11,7 +11,7 @@ public class AppMain {
 
         Environment env = Environment.builder()
                 .account(System.getenv("CDK_DEFAULT_ACCOUNT"))
-                .region(System.getenv("CDK_DEFAULT_REGION"))
+                .region("us-east-1")
                 .build();
 
         new BackendStack(app, "Backend", StackProps.builder()
