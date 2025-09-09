@@ -14,12 +14,15 @@ public class AppMain {
                 .region(System.getenv("CDK_DEFAULT_REGION"))
                 .build();
 
-        StackProps props = StackProps.builder()
+        new BackendStack(app, "Backend", StackProps.builder()
                 .env(env)
                 .stackName("JobApplicationTrackerBackend")
-                .build();
+                .build());
 
-        new BackendStack(app, "Backend", props);
+        new FrontendStack(app, "Frontend", StackProps.builder()
+                .env(env)
+                .stackName("JobApplicationTrackerFrontend")
+                .build());
 
         app.synth();
         System.out.println("Synth complete");
