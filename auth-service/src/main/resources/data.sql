@@ -6,13 +6,13 @@ CREATE TABLE
         password VARCHAR(255) NOT NULL
     );
 
--- Insert the user if no existing user with the same id or email exists
+-- Insert a demo user only if they are not already present (by id or email)
 INSERT INTO
     "users" (id, email, password)
 SELECT
     '223e4567-e89b-12d3-a456-426614174006',
-    'testuser@test.com',
-    '$2b$12$7hoRZfJrRKD2nIm2vHLs7OBETy.LWenXXMLKf99W8M4PUwO6KB7fu'
+    'demo@example.com',
+    '$2y$10$jNAM8UNS.qOqtnK5lTGIt.JxCAC6NUwnqNRnhAxlLpqjPHaJG9h5y'
 WHERE
     NOT EXISTS (
         SELECT
@@ -21,5 +21,5 @@ WHERE
             "users"
         WHERE
             id = '223e4567-e89b-12d3-a456-426614174006'
-            OR email = 'testuser@test.com'
+            OR email = 'demo@example.com'
     )
