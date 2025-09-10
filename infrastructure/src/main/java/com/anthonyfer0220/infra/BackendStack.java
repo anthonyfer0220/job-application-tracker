@@ -13,6 +13,8 @@ import software.amazon.awscdk.services.ec2.InstanceClass;
 import software.amazon.awscdk.services.ec2.InstanceSize;
 import software.amazon.awscdk.services.ec2.InstanceType;
 import software.amazon.awscdk.services.ec2.Port;
+import software.amazon.awscdk.services.certificatemanager.Certificate;
+import software.amazon.awscdk.services.certificatemanager.CertificateValidation;
 import software.amazon.awscdk.services.ec2.ISecurityGroup;
 import software.amazon.awscdk.services.ec2.SubnetSelection;
 import software.amazon.awscdk.services.ec2.SubnetType;
@@ -39,6 +41,9 @@ import software.amazon.awscdk.services.rds.DatabaseInstanceEngine;
 import software.amazon.awscdk.services.rds.PostgresEngineVersion;
 import software.amazon.awscdk.services.rds.PostgresInstanceEngineProps;
 import software.amazon.awscdk.services.rds.StorageType;
+import software.amazon.awscdk.services.route53.HostedZone;
+import software.amazon.awscdk.services.route53.HostedZoneProviderProps;
+import software.amazon.awscdk.services.route53.IHostedZone;
 import software.amazon.awscdk.services.servicediscovery.DnsRecordType;
 import software.amazon.awscdk.services.servicediscovery.IPrivateDnsNamespace;
 import software.amazon.awscdk.services.servicediscovery.PrivateDnsNamespace;
@@ -245,7 +250,7 @@ public class BackendStack extends Stack {
 				.image(imageFromEcr("api-gateway", "1.0.0"))
 				.environment(Map.of(
 						"SPRING_PROFILES_ACTIVE", "prod",
-						"FRONTEND_ORIGIN", "http://localhost:3000",
+						"FRONTEND_ORIGIN", "https://www.personaljobtracker.com",
 						"JOB_SERVICE_URL", "http://job-application-service.job-application-tracker.internal:4000",
 						"AUTH_SERVICE_URL", "http://auth-service.job-application-tracker.internal:4002"))
 				.portMappings(List.of(4005).stream()
@@ -266,6 +271,15 @@ public class BackendStack extends Stack {
 
 		taskDefinition.addContainer("APIGatewayContainer", containerOptions);
 
+		IHostedZone zone = HostedZone.fromLookup(this, "ApiZone", HostedZoneProviderProps.builder()
+				.domainName("personaljobtracker.com")
+				.build());
+
+		Certificate cert = Certificate.Builder.create(this, "ApiCert")
+				.domainName("api.personaljobtracker.com")
+				.validation(CertificateValidation.fromDns(zone))
+				.build();
+
 		return ApplicationLoadBalancedFargateService.Builder
 				.create(this, "APIGatewayService")
 				.cluster(ecsCluster)
@@ -277,8 +291,10 @@ public class BackendStack extends Stack {
 						.subnetType(SubnetType.PUBLIC)
 						.build())
 				.assignPublicIp(true)
+				.certificate(cert)
+				.domainName("api.personaljobtracker.com")
+				.domainZone(zone)
 				.build();
-
 	}
 
 	public void wireTraffic(ApplicationLoadBalancedFargateService api, FargateService job, FargateService auth) {
