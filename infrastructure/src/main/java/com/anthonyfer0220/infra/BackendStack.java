@@ -138,7 +138,9 @@ public class BackendStack extends Stack {
 				.storageType(StorageType.GP3)
 				.credentials(Credentials.fromGeneratedSecret("admin_user"))
 				.databaseName(dbName)
-				.removalPolicy(RemovalPolicy.DESTROY)
+				.backupRetention(Duration.days(7))
+				.deletionProtection(true)
+				.removalPolicy(RemovalPolicy.RETAIN)
 				.build();
 	}
 
