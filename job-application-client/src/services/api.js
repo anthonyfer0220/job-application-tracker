@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://JobApp-APIGa-ksS1m2ICNDcd-2027852023.us-east-2.elb.amazonaws.com',
+  baseURL: 'https://api.personaljobtracker.com',
   headers: {
     'Content-Type': 'application/json'
   }
